@@ -42,7 +42,7 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col-lg-4 col-md-6 col-ms-4">
-                    <a href="impuestos.html" style="text-decoration: none; color: #212529">
+                    <a href="impuestos.php" style="text-decoration: none; color: #212529">
                         <div class="card" style="margin-bottom: 25px" onmouseover="changeImgPredio1()" onmouseleave="changeImgPredio2()">
                             <div class="card-body">
                                 <h5>
