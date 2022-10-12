@@ -1,6 +1,15 @@
+<?php include("C:\Users\JUSTIN\PhpstormProjects\pasantias\models\conexion.php") ?>
+
 <?php
 
-
+if ($_POST) {
+    $cedula = $_POST['txtCedula'];
+    $objetoConexion = new Conexion();
+    $sentenciaSQLInfo = "SELECT * FROM web_datos_ingreso WHERE codcliente_ingreso = '$cedula';";
+    $sentenciaSQLInfoCiudadano = "SELECT DISTINCT ced_ident_ciudadano, apellidos_ciudadano, nombres_ciudadano FROM web_predios WHERE ced_ident_ciudadano like '$cedula'";
+    $informacion = $objetoConexion->consultar($sentenciaSQLInfo);
+    $nombreCiudadano = $objetoConexion->consultar($sentenciaSQLInfoCiudadano);
+}
 
 ?>
 
@@ -61,78 +70,105 @@
         </div>
     </div>
     <div id="seccionPrincipal" style="text-align: center; justify-content: center">
-        <div id="seccionIngresoDatos" class="container" style="padding-top: 30px">
-            <form id="formCedula" action="" method="post">
-                <div>
-                    <p>
-                        <label for="inputCedula">
-                            Ingrese su cédula o RUC sin guión:
-                        </label>
-                        <input id="inputCedula" type="text" placeholder="Ejemplo: 1002961412">
-                    </p>
-                </div>
-                <div id="seccionTeclado" class="numPad">
-                    <div class="nums">
-                        <div class="flex r r1">
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(1)"><h5>1</h5>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="seccionIngresoDatos" class="container" style="padding-top: 30px">
+                        <form id="formCedula" action="impuestos.php" method="post">
+                            <div>
+                                <p>
+                                    <label for="inputCedula">
+                                        Ingrese su cédula o RUC sin guión:
+                                    </label>
+                                    <input required name="txtCedula" id="inputCedula" type="text" placeholder="Ejemplo: 1002961412">
+                                </p>
                             </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(2)"><h5>2</h5>
+                            <div id="seccionTeclado" class="numPad">
+                                <div class="nums">
+                                    <div class="flex r r1">
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(1)"><h5>1</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(2)"><h5>2</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(3)"><h5>3</h5>
+                                        </div>
+                                    </div>
+                                    <div class="flex r r2">
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(4)"><h5>4</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(5)"><h5>5</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(6)"><h5>6</h5>
+                                        </div>
+                                    </div>
+                                    <div class="flex r r3">
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(7)"><h5>7</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(8)"><h5>8</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(9)"><h5>9</h5>
+                                        </div>
+                                    </div>
+                                    <div class="flex r r4">
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="agregarValor(0)"><h5>0</h5>
+                                        </div>
+                                        <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
+                                             onclick="borrarValor()">
+                                            <h5>Borrar</h5></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(3)"><h5>3</h5>
+                            <div id="seccionBotonesAccion" class="container" style="padding-top: 30px">
+                                <button type="submit" class="btn btn-outline-dark" name="btnConsultar">
+                                    <img src="https://info.ibarra.gob.ec/images/portfolio/find1.png" alt="BotónBuscar">
+                                    CONSULTAR DEUDAS
+                                </button>
+                                <a href="impuestos.php">
+                                    <button type="button" class="btn btn-outline-dark">
+                                        <img src="https://info.ibarra.gob.ec/images/icons/nueva_busqueda.png"
+                                             alt="BotónNuevaBusqueda"
+                                             style="filter: brightness(3.3)">
+                                        NUEVA BUSQUEDA
+                                    </button>
+                                </a>
                             </div>
-                        </div>
-                        <div class="flex r r2">
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(4)"><h5>4</h5>
-                            </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(5)"><h5>5</h5>
-                            </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(6)"><h5>6</h5>
-                            </div>
-                        </div>
-                        <div class="flex r r3">
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(7)"><h5>7</h5>
-                            </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(8)"><h5>8</h5>
-                            </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(9)"><h5>9</h5>
-                            </div>
-                        </div>
-                        <div class="flex r r4">
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="agregarValor(0)"><h5>0</h5>
-                            </div>
-                            <div onmouseover="cambiarColorOver(this)" onmouseleave="cambiarColorLeave(this)"
-                                 onclick="borrarValor()">
-                                <h5>Borrar</h5></div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-                <div id="seccionBotonesAccion" class="container" style="padding-top: 30px">
-                    <button type="submit" class="btn btn-outline-dark" name="btnConsultar">
-                        <img src="https://info.ibarra.gob.ec/images/portfolio/find1.png" alt="BotónBuscar">
-                        CONSULTAR DEUDAS
-                    </button>
-                    <a href="impuestos.php">
-                        <button type="button" class="btn btn-outline-dark">
-                            <img src="https://info.ibarra.gob.ec/images/icons/nueva_busqueda.png" alt="BotónNuevaBusqueda"
-                                 style="filter: brightness(3.3)">
-                            NUEVA BUSQUEDA
-                        </button>
-                    </a>
+                <div class="col-md-6">
+                    <div id="seccionInstruccionesPagos" class="container" style="padding-top: 30px;">
+                        <p style="text-align: left">
+                            Puede realizar el pago de sus deudas en los siguientes canales de atención:
+                        </p>
+                        <ul style="display: inline-block; text-align: left">
+                            <li>Ventanillas de recaudación del Edificio Municipal</li>
+                            <li>Banco del Pacífico</li>
+                            <li>Cooperativa de Ahorro y Crédito Mujeres Unidas</li>
+                            <li>Cooperativa de Ahorro y Crédito Artesanos Ltda.</li>
+                            <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
+                            <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
+                            <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
+                            <li>Botón de pagos en Línea del Portal Ciudadano Municipal (https://portalciudadano.ibarra.gob.ec):
+                                Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
+
         <div id="seccionTablaInformación" class="container" style="padding-top: 30px">
-            <?php if(isset($_POST['btnConsultar'])){ ?>
+            <?php if (isset($_POST['btnConsultar'])) { ?>
                 <div style="text-align: left"><h5>Información: </h5></div>
                 <div class="row" style="padding-top: 10px; padding-bottom: 20px">
                     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -143,45 +179,44 @@
                                     <b>CIUDADANO:</b>
                                 </td>
                                 <td colspan="4" style="padding: 3px">
-                                    1004438956 - YAMBERLA MARCILLO JUSTIN ALEXIS
+                                    <?php echo $nombreCiudadano[0]['ced_ident_ciudadano'] . " - " . $nombreCiudadano[0]['nombres_ciudadano'] . " " . $nombreCiudadano[0]['apellidos_ciudadano'] ?>
                                 </td>
                             </tr>
                             <tr>
                                 <th style="padding: 3px; width: 20%; border: 1px solid #212529">DIRECCION</th>
                                 <th style="padding: 3px; width: 15%; border: 1px solid #212529">FECHA DE INGRESO</th>
-                                <th style="padding: 3px; width: 15%; border: 1px solid #212529">FECHA DE VENCIMIENTO</th>
+                                <th style="padding: 3px; width: 15%; border: 1px solid #212529">FECHA DE VENCIMIENTO
+                                </th>
                                 <th style="padding: 3px; width: 40%; border: 1px solid #212529">COMENTARIO</th>
                                 <th style="padding: 3px; width: 10%; border: 1px solid #212529">TOTAL</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td colspan="5" style="padding: 3px">
-                                    No tiene valores
-                                </td>
-                            </tr>
+                            <?php foreach ($informacion as $item) { ?>
+                                <tr style="border: 1px solid #212529">
+                                    <td style="padding: 3px">
+                                        <div> <?php echo $item['direccion'] ?> </div>
+                                    </td>
+                                    <td style="padding: 3px">
+                                        <div> <?php echo $item['fecha_ingreso'] ?> </div>
+                                    </td>
+                                    <td style="padding: 3px">
+                                        <div> <?php echo $item['fecha_vencimiento'] ?> </div>
+                                    </td>
+                                    <td style="padding: 3px">
+                                        <div> <?php echo $item['comentario'] ?> </div>
+                                    </td>
+                                    <td style="padding: 3px">
+                                        <div> <?php echo $item['subtotal'] ?> </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             <?php } ?>
-        </div>
-        <div id="seccionInstruccionesPagos" class="container" style="padding-top: 30px;">
-            <p style="text-align: left">
-                Puede realizar el pago de sus deudas en los siguientes canales de atención:
-            </p>
-            <ul style="display: inline-block; text-align: left">
-                <li>Ventanillas de recaudación del Edificio Municipal</li>
-                <li>Banco del Pacífico</li>
-                <li>Cooperativa de Ahorro y Crédito Mujeres Unidas</li>
-                <li>Cooperativa de Ahorro y Crédito Artesanos Ltda.</li>
-                <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
-                <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
-                <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
-                <li>Botón de pagos en Línea del Portal Ciudadano Municipal (https://portalciudadano.ibarra.gob.ec):
-                    Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
-                </li>
-            </ul>
         </div>
     </div>
 </div>
