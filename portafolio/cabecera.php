@@ -1,10 +1,10 @@
 <?php
 
 session_start();
-if(isset($_SESSION['usuario']) != "Justin"){
+if (isset($_SESSION['usuario']) != "Justin") {
     header("location: login.php");
 }
-print_r($_SESSION);
+//print_r($_SESSION);
 
 ?>
 

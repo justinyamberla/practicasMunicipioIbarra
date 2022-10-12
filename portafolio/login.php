@@ -1,10 +1,11 @@
 <?php
+
 session_start();
-if($_POST){
-    if(($_POST['usuario'] == "Justin") && ($_POST['contraseña'] == "12345")){
+if ($_POST) {
+    if (($_POST['usuario'] == "Justin") && ($_POST['contraseña'] == "12345")) {
         $_SESSION['usuario'] = "Justin";
         header("Location: index.php"); //permite redireccionar
-    }else{
+    } else {
         echo "<script> alert('Usuario o contraseña incorrecto'); </script>";
     }
 }
