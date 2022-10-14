@@ -2,13 +2,26 @@
 
 <?php
 
-if ($_POST) {
-    $cedula = $_POST['txtCedula'];
+if (isset($_POST)) {
+    $cedula = $_POST['txtCedula'] ?? "";
+
     $objetoConexion = new Conexion();
-    $sentenciaSQLInfo = "SELECT * FROM web_datos_ingreso WHERE codcliente_ingreso = '$cedula';";
+    $sentenciaSQLInfoDeudas = "SELECT * FROM web_datos_ingreso WHERE codcliente_ingreso = '$cedula';";
     $sentenciaSQLInfoCiudadano = "SELECT DISTINCT ced_ident_ciudadano, apellidos_ciudadano, nombres_ciudadano FROM web_predios WHERE ced_ident_ciudadano like '$cedula'";
-    $informacion = $objetoConexion->consultar($sentenciaSQLInfo);
-    $nombreCiudadano = $objetoConexion->consultar($sentenciaSQLInfoCiudadano);
+    $informacionDeudas = $objetoConexion->consultar($sentenciaSQLInfoDeudas);
+    $informacionPersonal = $objetoConexion->consultar($sentenciaSQLInfoCiudadano);
+
+    if (empty($informacionPersonal[0]['ced_ident_ciudadano'])) {
+        $informacionPersonal[0]['ced_ident_ciudadano'] = "";
+    }
+    if (empty($informacionPersonal[0]['nombres_ciudadano'])) {
+        $informacionPersonal[0]['nombres_ciudadano'] = "";
+    }
+    if (empty($informacionPersonal[0]['apellidos_ciudadano'])) {
+        $informacionPersonal[0]['apellidos_ciudadano'] = "";
+    }
+
+    $txtInfoPersonal = $informacionPersonal[0]['ced_ident_ciudadano'] . " - " . $informacionPersonal[0]['nombres_ciudadano'] . " " . $informacionPersonal[0]['apellidos_ciudadano'];
 }
 
 ?>
@@ -24,6 +37,30 @@ if ($_POST) {
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <title>Impuestos</title>
     <style>
+        table{
+            border: 1px solid #212529;
+        }
+        thead{
+            border: 1px solid #212529;
+        }
+        th{
+            padding: 3px;
+            border: 1px solid #212529;
+        }
+        tr{
+            border: 1px solid #212529;
+        }
+        td{
+            padding: 3px;
+            border: 1px solid #212529;
+        }
+        #headerPrincipal{
+            background-color: #EE4B3DFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
         .flex {
             display: flex;
             align-items: center;
@@ -55,8 +92,7 @@ if ($_POST) {
 </head>
 <body style="background-color: #f2f2f2">
 <div id="contenidoPrincipal">
-    <div id="headerPrincipal"
-         style="background-color: #EE4B3DFF; color: white; padding: 20px; text-align: center; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)">
+    <div id="headerPrincipal">
         <div style="float: left; margin-top: -6px">
             <a href="menuPrincipal.php">
                 <button class="btn btn-light">
@@ -69,6 +105,7 @@ if ($_POST) {
             <h4>CONSULTE SUS DEUDAS</h4>
         </div>
     </div>
+
     <div id="seccionPrincipal" style="text-align: center; justify-content: center">
         <div class="container">
             <div class="row">
@@ -80,7 +117,8 @@ if ($_POST) {
                                     <label for="inputCedula">
                                         Ingrese su cédula o RUC sin guión:
                                     </label>
-                                    <input required name="txtCedula" id="inputCedula" type="text" placeholder="Ejemplo: 1002961412">
+                                    <input required name="txtCedula" id="inputCedula" type="text"
+                                           placeholder="Ejemplo: 1002961412">
                                 </p>
                             </div>
                             <div id="seccionTeclado" class="numPad">
@@ -158,7 +196,8 @@ if ($_POST) {
                             <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
                             <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
                             <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
-                            <li>Botón de pagos en Línea del Portal Ciudadano Municipal (https://portalciudadano.ibarra.gob.ec):
+                            <li>Botón de pagos en Línea del Portal Ciudadano Municipal
+                                (https://portalciudadano.ibarra.gob.ec):
                                 Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
                             </li>
                         </ul>
@@ -172,46 +211,51 @@ if ($_POST) {
                 <div style="text-align: left"><h5>Información: </h5></div>
                 <div class="row" style="padding-top: 10px; padding-bottom: 20px">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <table class="tabla" style="font-size: 16px; border: 1px solid #212529">
-                            <thead style="border: 1px solid #212529">
-                            <tr style="border: 1px solid #212529">
-                                <td colspan="1" style="padding: 3px; border: 1px solid #212529">
+                        <table class="tabla" style="font-size: 16px">
+                            <thead>
+                            <tr>
+                                <td colspan="1">
                                     <b>CIUDADANO:</b>
                                 </td>
-                                <td colspan="4" style="padding: 3px">
-                                    <?php echo $nombreCiudadano[0]['ced_ident_ciudadano'] . " - " . $nombreCiudadano[0]['nombres_ciudadano'] . " " . $nombreCiudadano[0]['apellidos_ciudadano'] ?>
+                                <td colspan="4" style="text-align: center">
+                                    <?php if(isset($txtInfoPersonal)) { echo $txtInfoPersonal; } ?>
                                 </td>
                             </tr>
                             <tr>
-                                <th style="padding: 3px; width: 20%; border: 1px solid #212529">DIRECCION</th>
-                                <th style="padding: 3px; width: 15%; border: 1px solid #212529">FECHA DE INGRESO</th>
-                                <th style="padding: 3px; width: 15%; border: 1px solid #212529">FECHA DE VENCIMIENTO
+                                <th style="width: 20%">DIRECCION</th>
+                                <th style="width: 15%">FECHA DE INGRESO</th>
+                                <th style="width: 15%">FECHA DE VENCIMIENTO
                                 </th>
-                                <th style="padding: 3px; width: 40%; border: 1px solid #212529">COMENTARIO</th>
-                                <th style="padding: 3px; width: 10%; border: 1px solid #212529">TOTAL</th>
+                                <th style="width: 40%">COMENTARIO</th>
+                                <th style="width: 10%">TOTAL</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($informacion as $item) { ?>
-                                <tr style="border: 1px solid #212529">
-                                    <td style="padding: 3px">
+                            <?php if(!empty($informacionDeudas)) {  foreach ($informacionDeudas as $item) { ?>
+                                <tr>
+                                    <td>
                                         <div> <?php echo $item['direccion'] ?> </div>
                                     </td>
-                                    <td style="padding: 3px">
+                                    <td>
                                         <div> <?php echo $item['fecha_ingreso'] ?> </div>
                                     </td>
-                                    <td style="padding: 3px">
+                                    <td>
                                         <div> <?php echo $item['fecha_vencimiento'] ?> </div>
                                     </td>
-                                    <td style="padding: 3px">
+                                    <td>
                                         <div> <?php echo $item['comentario'] ?> </div>
                                     </td>
-                                    <td style="padding: 3px">
+                                    <td>
                                         <div> <?php echo $item['subtotal'] ?> </div>
                                     </td>
                                 </tr>
+                            <?php } } else { ?>
+                                <tr>
+                                    <td colspan="5" style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
+                                        <div>No hay registros</div>
+                                    </td>
+                                </tr>
                             <?php } ?>
-
                             </tbody>
                         </table>
                     </div>
