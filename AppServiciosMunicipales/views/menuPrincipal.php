@@ -64,7 +64,7 @@
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-6 col-ms-4">
-                    <a href="https://google.com" style="text-decoration: none; color: #212529">
+                    <a href="sismert.php" style="text-decoration: none; color: #212529">
                         <div class="card" style="margin-bottom: 25px" onmouseover="changeImgMulta1()" onmouseleave="changeImgMulta2()">
                             <div class="card-body">
                                 <h5>
@@ -86,7 +86,7 @@
                     </a>
                 </div>
                 <div class="col-lg-4 col-md-6 col-ms-4">
-                    <a href="https://google.com" style="text-decoration: none; color: #212529">
+                    <a href="estado_tramite.php" style="text-decoration: none; color: #212529">
                         <div class="card" style="margin-bottom: 25px" onmouseover="changeImgEstado1()" onmouseleave="changeImgEstado2()">
                             <div class="card-body">
                                 <h5>
