@@ -1,127 +1,98 @@
-<?php include("C:\Users\JUSTIN\PhpstormProjects\pasantias\models\conexion2.php") ?>
+?>
+
 <?php
 
-$idTramite = "";
 if (isset($_POST)) {
     $num_tramite = isset($_POST['txtNumTramite']) ? $_POST['txtNumTramite'] : "";
     $anio_tramite = $_POST['opcionAnio'] ?? "";
+	$radi_nume_text = "";
 
-    //si los trámites consultados son mayor o igual al 2021, los trámites inician con TR , caso contrario inician con RE
-    if ($anio_tramite >= "2021") {
-        $idTramite = 'TR-' . $anio_tramite . '-' . $num_tramite;
-    } else {
-        $idTramite = 'RE-' . $anio_tramite . '-' . $num_tramite;
-    }
-}
+    //el número de trámite es una cadena de texto de 5 caracteres, control para completar con ceros a la izquierda.
+	if(!empty($num_tramite)){
+		while(strlen($num_tramite) < 5){
+			$num_tramite = "0" . $num_tramite;
+		}
+	}
+	//si los trámites consultados son mayor igual al 2021, los trámites inician con IMI-AC- , caso contrario inician con AC
+    if($anio_tramite >= "2021"){
+		$radi_nume_text= 'IMI-AC-' . $anio_tramite . '-' . $num_tramite . '-E';       
+    }else{
+		$radi_nume_text= 'AC-' . $anio_tramite . '-' . $num_tramite . '-E';       
+    }       
+	
+	//consultado de datos radicado
+	$sql_radicado = "SELECT radi_nume_radi, radi_nume_text, radi_fech_radi, radi_asunto, 
+                    esta_desc, usua_nomb, usua_apellido, radi_usua_rem, depe_nomb
+                    FROM radicado
+                    inner join estado on radicado.esta_codi=estado.esta_codi
+                    inner join usuarios on radicado.radi_usua_actu = usuarios.usua_codi
+                    inner join dependencia on usuarios.depe_codi=dependencia.depe_codi
+                    WHERE radi_nume_text = '$radi_nume_text'  
+                    AND radi_inst_actu=2
+                    AND radi_tipo=2
+                    AND radi_flag_impr=1;";
+	sc_lookup(rs, $sql_radicado, "conn_Quipux");
+	if ({rs} === false){
+		echo "Access error. Message=". {rs_erro} ;
+	}elseif (empty({rs})){
+		echo "";
+	}else{
+		{num_radi} = {rs[0][0]};
+		{num_radi_text} = {rs[0][1]};
+		{fecha_radi} = {rs[0][2]};
+		{asunto_radi} = {rs[0][3]};
+		{estado} = {rs[0][4]};
+		{nombre_usuario} = {rs[0][5]};
+		{apellido_usuario} = {rs[0][6]};
+		{usuario_rem} = {rs[0][7]};
+		{nombre_dependencia} = {rs[0][8]};
+	}
 
-function mostrarTablaInfo($idTramite): void
-{
-    //consulta de info de trámite
-    $sqlInfoTramite = "SELECT * FROM public.estado_tramite WHERE id_tramite = '$idTramite';";
-    //consulta de historial
-    $sqlHistorial = "SELECT * FROM public.estado_tramite_historial WHERE id_tramite = '$idTramite' ORDER BY fecha";
-    $objetoConexion = new Conexion2();
-    $infoTramite = $objetoConexion->consultar($sqlInfoTramite);
-    $infoHistorial = $objetoConexion->consultar($sqlHistorial);
-
-    ?>
-        <table id="tablaDatos" class="table table-bordeless table-hover table-sm">
-        <thead>
-        <tr class="table-secondary">
-            <td colspan="7" style="text-align: center">
-                <div>Información</div>
-            </td>
-        </thead>
-        <tbody>
-    <?php
-
-    if (!empty($infoTramite)) {
-        foreach ($infoTramite as $tramite) {
-            ?>
-                <tr>
-                    <th scope="row">Número de trámite:</th>
-                    <td><?php echo $tramite['id_tramite'] ?></td>
-
-                    <th scope="row">Usuario Actual:</th>
-                    <td><?php echo $tramite['usuario_actual'] ?></td>
-                </tr>
-                <tr>
-                    <th scope="row">Asunto:</th>
-                    <td><?php echo $tramite['asunto'] ?></td>
-
-                    <th scope="row">Dependencia actual:</th>
-                    <td><?php echo $tramite['dependencia_actual'] ?></td>
-                </tr>
-                <tr>
-                    <th scope="row">Fecha del registro:</th>
-                    <td><?php echo $tramite['fecha_registro'] . " " . $tramite['hora_registro'] ?></td>
-
-                    <th scope="row">Estado:</th>
-                    <td style="color: #cb0000; font-weight: bold"><?php echo $tramite['estado'] ?></td>
-                </tr>
-                <tr>
-                    <th scope="row">Solicitante:</th>
-                    <td><?php echo $tramite['solicitante'] ?></td>
-                </tr>
-                </tbody>
-            <?php
-        }
-    } else {
-        ?>
-        <tr>
-        <td colspan="7" style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
-        <div>No hay registros</div>
-        </td>
-		</tr>
-		<?php
-    }
-
-    ?>
-    </table>
-    <table id="tablaHistorial" class="table table-bordered border-secondary table-hover">
-        <thead>
-        <tr class="table-secondary border-secondary" style="text-align: center">
-            <td colspan="7">Historial del Trámite</td>
-        </tr>
-        <tr class="table-secondary border-secondary">
-            <th style="width: 10%">FECHA</th>
-            <th style="width: 19%">DEPENDENCIA ORIGEN</th>
-            <th style="width: 13%">USUARIO ORIGEN</th>
-            <th style="width: 10%">ACCIÓN</th>
-            <th style="width: 19%">DEPENDENCIA DESTINO</th>
-            <th style="width: 13%">USUARIO DESTINO</th>
-            <th style="width: 16%">OBSERVACIÓN</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        if (!empty($infoHistorial)) {
-            foreach ($infoHistorial as $item)
-            {
-                ?>
-        <tr>
-            <td><?php echo $item['fecha'] . " " . $item['hora'] ?></td>
-            <td><?php echo $item['dependencia_origen'] ?></td>
-            <td><?php echo $item['usuario_origen'] ?></td>
-            <td><?php echo $item['accion'] ?></td>
-            <td><?php echo $item['dependencia_destino'] ?></td>
-            <td><?php echo $item['usuario_destino'] ?></td>
-            <td><?php echo $item['observacion'] ?></td>
-        </tr>
-        <?php
-            }
-        } else { ?>
-        <tr>
-            <td colspan="7"
-                style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
-                <div>No hay registros</div>
-            </td>
-        </tr>
-        <?php } ?>
-        </tbody>
-    </table>
-    <?php
-
+	//extraer el valor de usuario_rem para ingresar en la consulta sql, ya que al hacerlo directamente genera error
+	$str_usuario_rem = "";
+	$new_usuario_rem = 0;
+	if(isset({usuario_rem})){
+		$str_usuario_rem = strval({usuario_rem});
+		$new_usuario_rem = (int) substr($str_usuario_rem, 1, 6);
+	}
+	
+	//consulta nombre y apellidos del solicitante dado el rem
+	$sql_datos_ciudadano = "SELECT ciu_nombre, ciu_apellido
+                    from ciudadano
+                    where ciu_codigo = '$new_usuario_rem';";
+	sc_lookup(rs1, $sql_datos_ciudadano, "conn_Quipux");
+	if ({rs1} === false){
+		echo "Access error. Message=". {rs1_erro} ;
+	}elseif (empty({rs1})){
+		echo "";
+	}else{
+		{nombre_solicitante} = {rs1[0][0]};
+		{apellido_solicitante} = {rs1[0][1]};
+	}
+	
+	//consulta historial
+	$radi_num_radi = 0;
+	if(isset({num_radi})){
+		$radi_num_radi = {num_radi};
+	}
+	$sql_historial = "SELECT h.hist_fech, u.usua_nomb as usua_nomb_origen,u.usua_apellido as usua_ape_origen,
+                    d.depe_nomb as depe_origen, h.hist_obse, 
+                    u1.usua_nomb as usua_nomb_dest,u1.usua_apellido as usua_ape_dest, d1.depe_nomb as depe_destino,
+                    t.sgd_ttr_descrip as accion
+                    from hist_eventos h
+                    inner join usuarios u on h.usua_codi_ori=u.usua_codi
+                    inner join usuarios u1 on h.usua_codi_dest=u1.usua_codi
+                    inner join sgd_ttr_transaccion t on h.sgd_ttr_codigo=t.sgd_ttr_codigo
+                    inner join dependencia d on u.depe_codi=d.depe_codi
+                    inner join dependencia d1 on u1.depe_codi=d1.depe_codi
+                    where h.radi_nume_radi = '$radi_num_radi'
+                    order by h.hist_fech desc; ";
+	sc_select(datos_historial, $sql_historial, "conn_Quipux");
+	if ({datos_historial} === false)
+	{
+	   echo "Access error. Message =". {datos_historial_erro};
+	}
+	
 }
 
 ?>
@@ -188,7 +159,7 @@ function mostrarTablaInfo($idTramite): void
 <div id="contenidoPrincipal">
     <div id="headerPrincipal">
         <div style="float: left; margin-top: -6px">
-            <a href="menu_v1.php">
+            <a href="http://172.16.8.75/scriptcase/app/Administrador_Kiosko/menu_principal">
                 <button class="btn btn-light">
                     <img src="https://info.ibarra.gob.ec/images/icons/home.png" alt="Botón Menú Inicio">
                     MENÚ INICIO
@@ -202,7 +173,7 @@ function mostrarTablaInfo($idTramite): void
 
     <div id="seccionPrincipal" class="container">
         <div class="row">
-            <div class="col-md-3"></div>
+			<div class="col-md-3"></div>
             <div id="seccionIngresoDatos" class="col-md-6">
                 <br>
                 <div class="card" style="background-color: #f2f2f2">
@@ -235,7 +206,7 @@ function mostrarTablaInfo($idTramite): void
                                                                                                  id="numTramite"
                                                                                                  class="form-control"
                                                                                                  placeholder="Ejemplo: 710"
-                                                                                                 value="<?php echo $num_tramite ?>">
+																								 value="<?php echo $num_tramite ?>">
                             <br>
                             <div id="seccionTeclado" class="numPad">
                                 <div class="nums">
@@ -301,15 +272,131 @@ function mostrarTablaInfo($idTramite): void
                     </div>
                 </div>
             </div>
-            <div class="col-md-3"></div>
-        </div>
-        <div id="seccionTablaInformacion" style="padding-top: 20px">
-            <?php if (isset($_POST['btnConsultar'])) { ?>
-            <div class="row">
-            <?php mostrarTablaInfo($idTramite); ?>
+			<!--
+            <div id="seccionInstruccionesPagos" class="col-md-6">
+                <br>
+                <div class="card" style="background-color: #f2f2f2">
+                    <div class="card-body">
+                        <div class="container" style="padding-top: 30px;">
+                            <p style="text-align: left">
+                                Puede realizar el pago de sus deudas en los siguientes canales de atención:
+                            </p>
+                            <ul style="display: inline-block; text-align: left">
+                                <li>Ventanillas de recaudación del Edificio Municipal</li>
+                                <li>Banco del Pacífico</li>
+                                <li>Cooperativa de Ahorro y Crédito Mujeres Unidas</li>
+                                <li>Cooperativa de Ahorro y Crédito Artesanos Ltda.</li>
+                                <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
+                                <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
+                                <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
+                                <li>Botón de pagos en Línea del Portal Ciudadano Municipal
+                                    (https://portalciudadano.ibarra.gob.ec):
+                                    Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <?php } ?>
+			-->
+			<div class="col-md-3"></div>
         </div>
+        <?php if (isset($_POST['btnConsultar'])) { ?>
+            <div id="seccionTablaInformacion" style="padding-top: 20px">
+                <div class="row">
+                    <table id="tablaDatos" class="table table-bordeless table-hover table-sm">
+                        <thead>
+                        <tr class="table-secondary">
+                            <td colspan="7"
+                                style="text-align: center">
+                                <div>Información</div>
+                            </td>
+                        </thead>
+                        <tbody>
+							<?php if(isset({num_radi_text})) { ?>
+                        <tr>
+                            <th scope="row">Número de trámite:</th>
+                            <td><?php echo {num_radi_text}; ?></td>
+
+                            <th scope="row">Usuario Actual:</th>
+                            <td><?php echo {nombre_usuario} . " " . {apellido_usuario}; ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Asunto:</th>
+                            <td><?php echo {asunto_radi}; ?></td>
+
+                            <th scope="row">Dependencia actual:</th>
+                            <td><?php echo {nombre_dependencia}; ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Fecha del registro:</th>
+                            <td><?php echo substr({fecha_radi}, 0, 19); ?></td>
+
+                            <th scope="row">Estado:</th>
+                            <td style="color: #cb0000; font-weight: bold"><?php echo {estado} ; ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Solicitante:</th>
+                            <td><?php echo {nombre_solicitante} . " " . {apellido_solicitante}; ?></td>
+                        </tr>
+							<?php }else{ ?>
+						<tr>
+                            <td colspan="7"
+                                style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
+                                <div>No hay registros</div>
+                            </td>
+						</tr>
+							<?php } ?>
+                        </tbody>
+                    </table>
+                    <table id="tablaHistorial" class="table table-bordered border-secondary table-hover">
+                        <thead>
+                        <tr class="table-secondary border-secondary" style="text-align: center">
+                            <td colspan="7">Historial del Trámite</td>
+                        </tr>
+                        <tr class="table-secondary border-secondary" style="text-align: center">
+                            <th style="width: 10%">FECHA</th>
+                            <th style="width: 19%">DEPENDENCIA ORIGEN</th>
+                            <th style="width: 13%">USUARIO ORIGEN</th>
+                            <th style="width: 10%">ACCIÓN</th>
+                            <th style="width: 19%">DEPENDENCIA DESTINO</th>
+                            <th style="width: 13%">USUARIO DESTINO</th>
+                            <th style="width: 16%">OBSERVACIÓN</th>
+                        </tr>
+                        </thead>
+                        <tbody style="text-align: center">
+                        <tr>
+							<?php if(!empty({datos_historial}->fields["hist_fech"])){
+										while(!{datos_historial}->EOF){ 
+							?>
+							<td><?php echo substr({datos_historial}->fields['hist_fech'], 0, 19); ?></td>
+							<td><?php echo {datos_historial}->fields['depe_origen']; ?></td>
+                            <td><?php echo {datos_historial}->fields['usua_nomb_origen'] . " " . {datos_historial}->fields['usua_ape_origen']; ?></td>
+                            <td><?php echo {datos_historial}->fields['accion']; ?></td>
+                            <td><?php echo {datos_historial}->fields['depe_destino']; ?></td>
+                            <td><?php echo {datos_historial}->fields['usua_nomb_dest'] . " " . {datos_historial}->fields['usua_ape_dest']; ?></td>
+                            <td style="text-transform: uppercase"><?php if(empty({datos_historial}->fields['hist_obse']) && {datos_historial}->fields['accion'] == "Envío Electónico del Documento"){
+								echo {datos_historial}->fields['accion'];
+							}else{
+								echo {datos_historial}->fields['hist_obse'];
+							} ?>
+							</td>
+						</tr>
+							<?php {datos_historial}->moveNext(); } }else{ ?>
+						<tr>
+                            <td colspan="7"
+                                style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
+                                <div>No hay registros</div>
+                            </td>
+						</tr>
+									
+							<?php } ?>
+                
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php } ?>
     </div>
 </div>
 <script>
@@ -340,10 +427,14 @@ function mostrarTablaInfo($idTramite): void
         celda.style.backgroundColor = "#f2f2f2"
         celda.style.color = "#212529"
     }
-
-    function moverHaciaInfo() {
+	
+	function moverHaciaInfo() {
         document.getElementById('seccionTablaInformacion').scrollIntoView({behavior: 'smooth'});
     }
 </script>
 </body>
 </html>
+
+
+
+<?php

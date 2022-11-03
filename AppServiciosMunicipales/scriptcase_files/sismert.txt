@@ -1,63 +1,80 @@
-<?php include("C:\Users\JUSTIN\PhpstormProjects\pasantias\models\conexion2.php") ?>
+?>
 
 <?php
-//placa con multa = IAK0898 - PTZ0272 - IBR0131 - IBB9180
-$placa = isset($_POST['txtPlaca']) ? $_POST['txtPlaca'] : '';
 
-function calcularMultaTotal($informacionMultas): void
-{
-    $multaTotal = 0;
-    foreach ($informacionMultas as $item) {
-        $multaTotal += $item['valor'];
-    }
-    printf("\$%.2f ", $multaTotal);
-}
+$placa = isset($_POST['txtPlaca']) ?  $_POST['txtPlaca'] : '';
+//placa con multa = IAK0898 - PTZ0272
+function mostrarInfoMultas($placa){
+	
+	$sqlPrueba = "SELECT numero_placa,  c.nombre || ' Y ' || c2.nombre AS calles, fecha, hora, valor+ valor_tiempo AS valor 
+    FROM sismert.v_ert_notificacion_multa_rentas, ert_calle c, ert_calle c2 where  calle_principal = c.codigo AND
+    calle_transversal = c2.codigo and numero_placa ='$placa' 
+    and estado = 'N' and estado_rentas IN ('NP','NR') order by fecha, hora desc";
 
-function mostrarInfoMultas($placa)
-{
-    $objetoConexion = new Conexion2();
-    $sql = "SELECT * FROM public.sismert WHERE placa = '$placa' ORDER BY fecha DESC ";
-    $informacionMultas = $objetoConexion->consultar($sql);
-
-    if (!empty($informacionMultas)) {
-        foreach ($informacionMultas as $item) {
-            ?>
+    sc_select (datosMultas, $sqlPrueba);
+	if (!empty({datosMultas}->fields["valor"])) 
+	{ 
+		$multaTotal = 0; 
+		while (!{datosMultas}->EOF) 
+		{ 
+			?>
             <tr>
-                <td>
-                    <div> <?php echo $item['calles_multa'] ?> </div>
+            	<td>
+                    <div> 
+					<?php 
+					$calles = {datosMultas}->fields["calles"];								
+					echo $calles;
+					?> 
+					</div>
+                </td>
+             	<td>
+                    <div>
+					<?php 
+					$fecha = {datosMultas}->fields["fecha"];								
+					echo $fecha;
+					?>
+					</div>
                 </td>
                 <td>
-                    <div> <?php echo $item['fecha'] ?> </div>
+                    <div>
+					<?php 
+					$hora = {datosMultas}->fields["hora"];								
+					echo $hora;
+					?>
+					</div>
                 </td>
                 <td>
-                    <div> <?php echo $item['hora'] ?> </div>
-                </td>
-                <td>
-                    <div> <?php echo "$" . $item['valor'] ?> </div>
+					<div>
+					<?php 
+					$valor = {datosMultas}->fields["valor"];								
+					echo "$" . $valor;
+					?>
+					</div>
                 </td>
             </tr>
-            <?php
-        }
-        ?>
+            <?php 
+			$multaTotal += $valor; 
+			{datosMultas}->moveNext(); 
+		} 
+		?>
         <tr>
-            <th class="table-secondary border-secondary" colspan="3" style="width: 50%">
-                TOTAL:
-            </th>
+           	<th class="table-secondary border-secondary" colspan="3" style="width: 50%">TOTAL:</th>
             <th colspan="1" style="width: 50%; color: #cb0000">
-                <?php calcularMultaTotal($informacionMultas); ?>
+				<?php printf ("\$%.2f ", $multaTotal); ?>
             </th>
         </tr>
-        <?php
-    } else {
-        ?>
-        <tr>
-            <td colspan="4"
-                style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
-                <div>No hay registros</div>
-            </td>
-        </tr>
-        <?php
-    }
+        <?php 
+		{datosMultas}->Close(); 
+	} else 
+	{ 
+		?>
+		<tr>
+			<td colspan="4" style="text-align: center; font-size: 16px; color: #cb0000; font-weight: bold;">
+				<div>No hay registros</div>
+			</td>
+		</tr>
+		 <?php 
+	}
 }
 
 ?>
@@ -125,15 +142,15 @@ function mostrarInfoMultas($placa)
         }
 
         .numPad .nums h5 {
-            margin: auto;
+            margin: auto
         }
     </style>
 </head>
-<body onload="moverHaciaInfo()" style="background-color: #f2f2f2">
+<body  onload="moverHaciaInfo()" style="background-color: #f2f2f2">
 <div id="contenidoPrincipal">
     <div id="headerPrincipal">
         <div style="float: left; margin-top: -6px">
-            <a href="menu_v1.php">
+            <a href="http://172.16.8.75/scriptcase/app/Administrador_Kiosko/menu_principal">
                 <button class="btn btn-light">
                     <img src="https://info.ibarra.gob.ec/images/icons/home.png" alt="Botón Menú Inicio">
                     MENÚ INICIO
@@ -146,7 +163,7 @@ function mostrarInfoMultas($placa)
     </div>
 
     <div class="container" id="seccionPrincipal">
-        <div class="row">
+            <div class="row">
             <div id="seccionIngresoDatos" class="col-md-12">
                 <br>
                 <div class="card" style="background-color: #f2f2f2">
@@ -158,8 +175,7 @@ function mostrarInfoMultas($placa)
                                         <label for="inputPlaca">
                                             Ingrese la PLACA:
                                         </label>
-                                        <input value="<?php echo $placa ?>" required name="txtPlaca" id="inputPlaca"
-                                               type="text"
+                                        <input value="<?php echo $placa ?>" required name="txtPlaca" id="inputPlaca" type="text"
                                                placeholder="Ejemplo: ABC0123">
                                     </p>
                                     <ul style="text-align: left; display: inline-block">
@@ -368,62 +384,61 @@ function mostrarInfoMultas($placa)
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div id="seccionInstruccionesPagos" class="col-md-12">
-                <div class="container" style="padding-top: 30px;">
-                    <p style="text-align: left">
-                        Puede realizar el pago de sus deudas en los siguientes canales de atención:
-                    </p>
-                    <ul style="display: inline-block; text-align: left">
-                        <li>Ventanillas de recaudación del Edificio Municipal</li>
-                        <li>Banco del Pacífico</li>
-                        <li>Cooperativa de Ahorro y Crédito Mujeres Unidas</li>
-                        <li>Cooperativa de Ahorro y Crédito Artesanos Ltda.</li>
-                        <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
-                        <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
-                        <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
-                        <li>Botón de pagos en Línea del Portal Ciudadano Municipal
-                            (https://portalciudadano.ibarra.gob.ec):
-                            Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <?php if (isset($_POST['btnConsultar'])) { ?>
-            <div id="seccionTablaInformacion" class="row" style="padding-top: 10px; padding-bottom: 20px">
+            <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-hover table-bordered border-secondary" style="font-size: 16px">
-                        <thead>
-                        <tr class="table-secondary border-secondary" style="text-align: center;">
-                            <td colspan="4">
-                                DATOS DE LA MULTAS
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary border-secondary" colspan="1">
-                                <b>PLACA:</b>
-                            </td>
-                            <td colspan="3" style="text-align: center">
-                                <?php if (isset($placa)) {
-                                    echo $placa;
-                                } ?>
-                            </td>
-                        </tr>
-                        <tr class="table-secondary border-secondary">
-                            <th style="width: 40%">CALLES</th>
-                            <th style="width: 20%">FECHA</th>
-                            <th style="width: 20%">HORA</th>
-                            <th style="width: 20%">VALOR</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php mostrarInfoMultas($placa); ?>
-                        </tbody>
-                    </table>
+                    <div id="seccionInstruccionesPagos" class="container" style="padding-top: 30px;">
+                        <p style="text-align: left">
+                            Puede realizar el pago de sus deudas en los siguientes canales de atención:
+                        </p>
+                        <ul style="display: inline-block; text-align: left">
+                            <li>Ventanillas de recaudación del Edificio Municipal</li>
+                            <li>Banco del Pacífico</li>
+                            <li>Cooperativa de Ahorro y Crédito Mujeres Unidas</li>
+                            <li>Cooperativa de Ahorro y Crédito Artesanos Ltda.</li>
+                            <li>Cooperativa de Ahorro y Crédito 29 de Octubre Ltda.</li>
+                            <li>Asociación Mutualista de Ahorro y Crédito para la Vivienda Imbabura</li>
+                            <li>Cooperativa de Ahorro y Crédito San Antonio Ltda. - Imbabura</li>
+                            <li>Botón de pagos en Línea del Portal Ciudadano Municipal
+                                (https://portalciudadano.ibarra.gob.ec):
+                                Tarjetas de crédito Diners, Discover, Visa, Mastercard Pichincha.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        <?php } ?>
+            <?php if (isset($_POST['btnConsultar'])) { ?>
+                <div id="seccionTablaInformacion" class="row" style="padding-top: 10px; padding-bottom: 20px">
+                    <div class="col-md-12">
+                        <table class="table table-hover table-bordered border-secondary" style="font-size: 16px">
+                            <thead>
+                            <tr class="table-secondary border-secondary" style="text-align: center;">
+                                <td colspan="4">
+                                    DATOS DE LA MULTAS
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-secondary border-secondary" colspan="1">
+                                    <b>PLACA:</b>
+                                </td>
+                                <td colspan="3" style="text-align: center">
+                                    <?php if(isset($placa)) { echo $placa; } ?>
+                                </td>
+                            </tr>
+                            <tr class="table-secondary border-secondary">
+                                <th style="width: 40%">CALLES</th>
+                                <th style="width: 20%">FECHA</th>
+                                <th style="width: 20%">HORA</th>
+                                <th style="width: 20%">VALOR</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php mostrarInfoMultas($placa); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php } ?>
+        
     </div>
 </div>
 <script>
@@ -454,11 +469,14 @@ function mostrarInfoMultas($placa)
         celda.style.backgroundColor = "#f2f2f2"
         celda.style.color = "#212529"
     }
-
-    function moverHaciaInfo() {
+	
+	function moverHaciaInfo() {
         document.getElementById('seccionTablaInformacion').scrollIntoView({behavior: 'smooth'});
     }
 
 </script>
 </body>
 </html>
+
+
+<?php
