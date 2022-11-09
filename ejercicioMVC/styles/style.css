@@ -1,0 +1,15 @@
+body {
+    font-family: Roboto, sans, sans-serif;
+    background-color: #041C32;
+    color: white;
+}
+table th {
+    color: aliceblue;
+}
+table tbody{
+    color: aliceblue;
+}
+.card{
+    background-color: #041C32;
+    color: aliceblue;
+}

@@ -10,6 +10,13 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -29,11 +36,13 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/JUSTIN/Documents/ProyectosPHP/practicasMunicipioIbarra/ejercicioMVC&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\JUSTIN\Documents\ProyectosPHP\practicasMunicipioIbarra\ejercicioMVC\views\vehiculos" />
       <recent name="C:\Users\JUSTIN\Documents\ProyectosPHP\practicasMunicipioIbarra\ejercicioMVC" />
     </key>
   </component>
@@ -47,6 +56,10 @@
       <updated>1666541247749</updated>
       <workItem from="1666541249483" duration="10408000" />
       <workItem from="1666617224986" duration="28000" />
+      <workItem from="1667441559490" duration="2518000" />
+      <workItem from="1667611518748" duration="14521000" />
+      <workItem from="1667924647367" duration="6553000" />
+      <workItem from="1667947651833" duration="14957000" />
     </task>
     <servers />
   </component>

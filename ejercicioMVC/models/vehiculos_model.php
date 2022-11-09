@@ -2,29 +2,80 @@
 
 class VehiculosModel
 {
-    private array $vehiculos;
-    private Conexion $datos;
+    private string $tabla = 'vehiculos';
+    private $conexion;
 
-    public function __construct()
+    public function getConexion(): void
     {
-        $this->db = new Conexion();
-        $this->vehiculos = array();
+        $databaseObj = new Database();
+        $this->conexion = $databaseObj->conexion;
     }
 
-    public function leer_vehiculos(): bool|array
+    // Obtener todos los vehículos
+    public function getVehiculos()
     {
-        $sql = "SELECT * from vehiculos";
-        $consulta = $this->datos->conexion->prepare($sql);
-        $consulta->execute();
-        return $this->vehiculos = $consulta->fetchAll();
+        $this->getConexion();
+        $sql = "SELECT * FROM " . $this->tabla;
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
-    public function agregar_vehiculo(): void
+    // Obtener vehículo por placa
+    public function getVehiculoByPlaca($placa)
     {
-        $sql = "SELECT * from vehiculos";
-        $consulta = $this->datos->conexion->prepare($sql);
-        $consulta->execute();
+        if (is_null($placa)) return false;
+        $this->getConexion();
+        $sql = "SELECT * FROM $this->tabla WHERE placa = '$placa'";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch();
     }
+
+    public function actualizarVehiculo($params)
+    {
+        $this->getConexion();
+
+        $placa = $params['txtPlaca'];
+        $marca = $params["txtMarca"];
+        $modelo = $params["txtModelo"];
+        $color = $params["txtColor"];
+        $anio = $params["txtAnio"];
+
+        $sql = "UPDATE vehiculos SET placa='$placa', marca='$marca', modelo='$modelo', color='$color', año='$anio' WHERE placa='$placa';";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute();
+
+        return $placa;
+    }
+
+    public function crearVehiculo($params)
+    {
+        $this->getConexion();
+
+        $placa = $params['txtPlaca'];
+        $marca = $params["txtMarca"];
+        $modelo = $params["txtModelo"];
+        $color = $params["txtColor"];
+        $anio = $params["txtAnio"];
+
+        $sql = "INSERT INTO vehiculos (placa, marca, modelo, color, año) VALUES ('$placa','$marca','$modelo','$color','$anio')";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute();
+
+        return $placa;
+    }
+
+    // Borrar vehículo por placa
+    public function eliminarVehiculoPorPlaca($placa)
+    {
+        $this->getConexion();
+        $sql = "DELETE FROM " . $this->tabla . " WHERE placa = ?";
+        $stmt = $this->conexion->prepare($sql);
+        return $stmt->execute([$placa]);
+    }
+
 }
 
-?>
