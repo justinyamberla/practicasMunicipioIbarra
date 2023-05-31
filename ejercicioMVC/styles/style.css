@@ -1,15 +1,25 @@
 body {
     font-family: Roboto, sans, sans-serif;
-    background-color: #041C32;
-    color: white;
 }
-table th {
-    color: aliceblue;
+
+.container {
+    margin-bottom: 30px;
 }
-table tbody{
-    color: aliceblue;
+
+.card {
+    margin: 5px;
 }
-.card{
-    background-color: #041C32;
-    color: aliceblue;
+
+.card-buttons {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap
+}
+
+.card-title {
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    margin: auto;
 }

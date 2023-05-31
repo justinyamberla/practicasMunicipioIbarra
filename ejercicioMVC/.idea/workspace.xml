@@ -30,16 +30,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/JUSTIN/Documents/ProyectosPHP/practicasMunicipioIbarra/ejercicioMVC&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/xampp/htdocs/ci4biblioteca",
+    "list.type.of.created.stylesheet": "CSS",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\JUSTIN\Documents\ProyectosPHP\practicasMunicipioIbarra\ejercicioMVC\views\vehiculos" />
@@ -60,6 +62,18 @@
       <workItem from="1667611518748" duration="14521000" />
       <workItem from="1667924647367" duration="6553000" />
       <workItem from="1667947651833" duration="14957000" />
+      <workItem from="1677523320015" duration="1063000" />
+      <workItem from="1680818695525" duration="429000" />
+      <workItem from="1681938475058" duration="440000" />
+      <workItem from="1681938958030" duration="240000" />
+      <workItem from="1681939229608" duration="2297000" />
+      <workItem from="1681996424786" duration="294000" />
+      <workItem from="1681997743122" duration="689000" />
+      <workItem from="1682553344105" duration="4816000" />
+      <workItem from="1683749471601" duration="235000" />
+      <workItem from="1684083934978" duration="125000" />
+      <workItem from="1684084084160" duration="46000" />
+      <workItem from="1684956420599" duration="307000" />
     </task>
     <servers />
   </component>

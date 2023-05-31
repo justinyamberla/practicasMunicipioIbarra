@@ -22,23 +22,23 @@ if (isset($datosParaVista["data"]["año"])) $anio = $datosParaVista["data"]["añ
     ?>
     <form class="form" action="http://localhost:63342/ejercicioMVC/index.php?controller=vehiculo&action=actualizar"
           method="POST">
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label for="inputPlaca">Placa:</label>
             <input class="form-control" type="text" name="txtPlaca" id="inputPlaca" value="<?php echo $placa; ?>"/>
         </div>
-        <div class="form-group mb-2">
+        <div class="form-group mb-3">
             <label for="inputMarca">Marca:</label>
             <input class="form-control" type="text" name="txtMarca" id="inputMarca" value="<?php echo $marca; ?>"/>
         </div>
-        <div class="form-group mb-2">
+        <div class="form-group mb-3">
             <label for="inputModelo">Modelo:</label>
             <input class="form-control" type="text" name="txtModelo" id="inputModelo" value="<?php echo $modelo; ?>"/>
         </div>
-        <div class="form-group mb-2">
+        <div class="form-group mb-3">
             <label for="inputColor">Color:</label>
             <input class="form-control" type="text" name="txtColor" id="inputColor" value="<?php echo $color; ?>"/>
         </div>
-        <div class="form-group mb-2">
+        <div class="form-group mb-3">
             <label for="inputAnio">Año:</label>
             <input class="form-control" type="text" name="txtAnio" id="inputAnio" value="<?php echo $anio; ?>"/>
         </div>

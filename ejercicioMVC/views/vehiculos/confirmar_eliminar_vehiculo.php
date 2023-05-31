@@ -3,7 +3,7 @@
           method="POST">
         <input type="hidden" name="placa" value="<?php echo $datosParaVista["data"]["placa"]; ?>"/>
         <div class="alert alert-warning">
-            <b>¿Confirma que desea eliminar esta nota?:</b>
+            <b>¿Confirma que desea eliminar este vehículo?:</b>
             <i><?php echo $datosParaVista["data"]["placa"]; ?></i>
         </div>
         <input type="submit" value="Eliminar" class="btn btn-danger"/>
