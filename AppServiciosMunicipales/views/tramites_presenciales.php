@@ -314,7 +314,7 @@ function mostrarDirecciones(): void
 </div>
 <script>
     function agregarValor(caracter) {
-        let txt = document.getElementById("inputPlaca")
+        let txt = document.getElementById("inputPalabra")
         let valorTxt = txt.value
         let numeroCaracteres = valorTxt.length
         if (numeroCaracteres < 8) {
@@ -324,7 +324,7 @@ function mostrarDirecciones(): void
     }
 
     function borrarValor() {
-        let txt = document.getElementById("inputPlaca")
+        let txt = document.getElementById("inputPalabra")
         let valorTxt = txt.value
         let cont = valorTxt.length - 1
         valorTxt = valorTxt.substring(0, cont)
